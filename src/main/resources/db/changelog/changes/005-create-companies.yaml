@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-company
+      author: juan
+      changes:
+        - createTable:
+            tableName: companies
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: sector_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: formalization_level_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: registration_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: address
+                  type: varchar(255)
+              - column:
+                  name: latitude
+                  type: decimal(10,8)
+              - column:
+                  name: longitude
+                  type: decimal(11,8)
+        - addForeignKeyConstraint:
+            baseTableName: companies
+            baseColumnNames: sector_id
+            referencedTableName: companies_sector
+            referencedColumnNames: id
+            constraintName: fk_company_sector
+        - addForeignKeyConstraint:
+            baseTableName: companies
+            baseColumnNames: formalization_level_id
+            referencedTableName: formalization_level
+            referencedColumnNames: id
+            constraintName: fk_company_formalization_level

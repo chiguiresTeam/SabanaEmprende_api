@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-companies-sectors
+      author: juan
+      changes:
+        - createTable:
+            tableName: companies_sector
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+        # Initial sector records
+        - insert:
+            tableName: companies_sector
+            columns:
+              - column: { name: name, value: 'Comercio' }
+        - insert:
+            tableName: companies_sector
+            columns:
+              - column: { name: name, value: 'Tecnología' }
+        - insert:
+            tableName: companies_sector
+            columns:
+              - column: { name: name, value: 'Agro' }
+        - insert:
+            tableName: companies_sector
+            columns:
+              - column: { name: name, value: 'Servicios' }

@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-formalization-level
+      author: juan
+      changes:
+        - createTable:
+            tableName: formalization_level
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+        # Initial formalization levels
+        - insert:
+            tableName: formalization_level
+            columns:
+              - column: { name: name, value: 'Verde' }
+        - insert:
+            tableName: formalization_level
+            columns:
+              - column: { name: name, value: 'Amarillo' }
+        - insert:
+            tableName: formalization_level
+            columns:
+              - column: { name: name, value: 'Rojo' }

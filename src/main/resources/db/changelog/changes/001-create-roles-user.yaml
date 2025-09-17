@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-types-people
+      author: juan
+      changes:
+        - createTable:
+            tableName: roles_user_app
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+        - insert:
+            tableName: roles_user_app
+            columns:
+              - column: { name: name, value: 'Cliente' }
+        - insert:
+            tableName: roles_user_app
+            columns:
+              - column: { name: name, value: 'Empresario' }
+        - insert:
+            tableName: roles_user_app
+            columns:
+              - column: { name: name, value: 'Inversor' }
+        - insert:
+            tableName: roles_user_app
+            columns:
+              - column: {name: name, value: 'Alcaldia'}
