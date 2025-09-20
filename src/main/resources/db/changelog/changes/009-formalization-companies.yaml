@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-companies_formalization
+      author: juan
+      changes:
+        - createTable:
+            tableName: companies_formalization
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: is_done
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: companies_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: formalization_process_id
+                  type: int
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: companies_formalization
+            baseColumnNames: companies_id
+            referencedTableName: companies
+            referencedColumnNames: id
+            constraintName: fk_companies_id
+        - addForeignKeyConstraint:
+            baseTableName: companies_formalization
+            baseColumnNames: formalization_process_id
+            referencedTableName: formalization_process
+            referencedColumnNames: id
+            constraintName: fk_formalization_process_id

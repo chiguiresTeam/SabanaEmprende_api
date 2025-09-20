@@ -1,6 +1,7 @@
 package com.hackaton.SabanaEmprende_api.People.Model;
 
 import com.hackaton.SabanaEmprende_api.People.dto.PeopleDto;
+import com.hackaton.SabanaEmprende_api.People.dto.UpdatePeopleDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,12 @@ public class PeopleModel {
     
     public PeopleModel fromDto(PeopleDto dto){
         this.cc = dto.getCc();
+        this.firstName = dto.getFirstName();
+        this.lastName = dto.getLastName();
+        this.phone = dto.getPhone();
+        return this;
+    }
+    public PeopleModel fromDto(UpdatePeopleDto dto){
         this.firstName = dto.getFirstName();
         this.lastName = dto.getLastName();
         this.phone = dto.getPhone();

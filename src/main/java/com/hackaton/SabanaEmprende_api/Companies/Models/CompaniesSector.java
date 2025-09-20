@@ -1,5 +1,6 @@
 package com.hackaton.SabanaEmprende_api.Companies.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class CompaniesSector {
     private Integer id;
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sector", fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<CompaniesModel> companiesModel;
 }

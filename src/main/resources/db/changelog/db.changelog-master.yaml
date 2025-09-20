@@ -11,3 +11,9 @@ databaseChangeLog:
       file: db/changelog/changes/005-create-companies.yaml
   - include:
       file: db/changelog/changes/006-create-users.yaml
+  - include:
+      file: db/changelog/changes/007-create-products.yaml
+  - include:
+      file: db/changelog/changes/008-formalization-process.yaml
+  - include:
+      file: db/changelog/changes/009-formalization-companies.yaml
