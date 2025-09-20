@@ -44,6 +44,7 @@ public class SecurityConfig {
                         // 🔹 Permitir TODOS los métodos para compañías y productos
                         .requestMatchers("/companies", "/companies/**").permitAll()
                         .requestMatchers("/products", "/products/**").permitAll()
+                        .requestMatchers("/events","/events/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/formalization", "/formalization/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
@@ -61,10 +62,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         // 🔹 Acepta requests desde cualquier origen
-        config.setAllowedOrigins(List.of("*"));
+        config.setAllowedOrigins(List.of("http://localhost:5173/"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
-        config.setAllowCredentials(false);  // no usamos cookies con JWT
+        config.setAllowCredentials(true);  // no usamos cookies con JWT
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

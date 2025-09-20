@@ -29,7 +29,7 @@ public class TweetsEventsService {
     /**
      * Se ejecuta cada 3 minutos: obtiene tweets y manda textos a la IA.
      */
-    @Scheduled(fixedRate = 3 * 60 * 1000)
+    //@Scheduled(fixedRate = 10 * 60 * 1000)
     public void searchTweets() {
         try {
             HttpHeaders headers = new HttpHeaders();

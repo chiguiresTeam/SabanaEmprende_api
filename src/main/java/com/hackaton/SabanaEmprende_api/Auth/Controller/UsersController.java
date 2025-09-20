@@ -14,8 +14,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/auth")
@@ -58,12 +62,15 @@ public class UsersController {
 
         SignInResDTO resDto = usersService.singIn(dto);
         String jwt = usersService.generateJwt(resDto);
-        Cookie cookie = new Cookie("access_token", jwt);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(env.matchesProfiles("prod"));
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("access_token", jwt)
+                .httpOnly(true)
+                .secure(env.matchesProfiles("prod"))
+                .path("/")
+                .sameSite("None")          // ⚠️ Necesario si tu front y back están en dominios/puertos distintos
+                .maxAge(Duration.ofHours(1))
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(resDto);
     }
 }

@@ -25,8 +25,4 @@ public class PeopleDto {
     @Pattern(regexp = "^\\d{7,10}$",
             message = "phone debe tener entre 7 y 10 dígitos, solo números")
     private String phone;
-
-    @NotNull(message = "typePeopleId es obligatorio")
-    @Positive(message = "typePeopleId debe ser un número positivo")
-    private Long typePeopleId;
 }
