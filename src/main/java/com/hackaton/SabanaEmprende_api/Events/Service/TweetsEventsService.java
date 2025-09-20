@@ -17,62 +17,28 @@ import java.util.stream.Collectors;
 public class TweetsEventsService {
 
     @Value("${twitter.token}")
-    private String TWITTER_BEARER_TOKEN;
+    private String twitterBearerToken;
 
-    @Value("${deepseek.api_key}")
-    private String DEEPSEEK_API_KEY;
 
-    private static final String urlTweets =
+    /** Endpoint de Twitter para obtener los últimos tweets del usuario */
+    private static final String URL_TWEETS =
             "https://api.twitter.com/2/users/557962165/tweets?tweet.fields=created_at,text";
-
-    private static final String deepSeekUrl =
-            "https://api.deepseek.com/v1/chat/completions"; // 🔹 Endpoint estándar de DeepSeek
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
-     * Llama a DeepSeek para analizar los textos obtenidos de Twitter
+     * Se ejecuta cada 3 minutos: obtiene tweets y manda textos a la IA.
      */
-    public String deepSeekResponse(List<String> textos) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(DEEPSEEK_API_KEY);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // Construir payload estilo OpenAI/DeepSeek
-        Map<String, Object> body = Map.of(
-                "model", "deepseek-chat",   // ⚠️ Ajusta si usas otro modelo
-                "messages", List.of(
-                        Map.of("role", "system", "content",
-                                "Eres un analista que clasifica tweets en relevantes o no para emprendimiento/comercio."),
-                        Map.of("role", "user", "content", String.join("\n\n", textos))
-                )
-        );
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(
-                deepSeekUrl,
-                HttpMethod.POST,
-                entity,
-                String.class
-        );
-
-        return response.getBody();
-    }
-
-    /**
-     * Se ejecuta cada 30 segundos → obtiene tweets y manda textos a la IA
-     */
-    @Scheduled(fixedRate = 60000 * 3)
+    @Scheduled(fixedRate = 3 * 60 * 1000)
     public void searchTweets() {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(TWITTER_BEARER_TOKEN);
+            headers.setBearerAuth(twitterBearerToken);
 
-            HttpEntity<String> entity = new HttpEntity<>(headers);
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
 
             ResponseEntity<TweetsApiResponseDto> response = restTemplate.exchange(
-                    urlTweets,
+                    URL_TWEETS,
                     HttpMethod.GET,
                     entity,
                     TweetsApiResponseDto.class
@@ -81,19 +47,18 @@ public class TweetsEventsService {
             TweetsApiResponseDto twitterResponse = response.getBody();
 
             if (twitterResponse != null && twitterResponse.getData() != null) {
-                List<String> textos = twitterResponse.getData()
-                        .stream()
+                List<String> textos = twitterResponse.getData().stream()
                         .map(TweetsApiResponseDto.TweetData::getText)
                         .collect(Collectors.toList());
 
                 System.out.println("📌 Textos obtenidos: " + textos);
 
-                String deepSeekResult = deepSeekResponse(textos);
-                System.out.println("🤖 Respuesta de IA: " + deepSeekResult);
+            } else {
+                System.out.println("⚠️ No se recibieron tweets nuevos.");
             }
 
         } catch (Exception e) {
-            System.err.println("Error consultando tweets: " + e.getMessage());
+            System.err.println("❌ Error consultando tweets o DeepSeek: " + e.getMessage());
         }
     }
 }
