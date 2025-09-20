@@ -1,0 +1,198 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-changes-for-formalization-process
+      author: juan
+      changes:
+        - createTable:
+            tableName: categories_formalization
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 2
+      author: juan
+      changes:
+        - createTable:
+            tableName: formalization_process
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: details_renovation
+                  type: TEXT
+              - column:
+                  name: ministery
+                  type: VARCHAR(255)
+              - column:
+                  name: ministery_link
+                  type: VARCHAR(500)
+              - column:
+                  name: categories_formalization_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_formalization_process_category
+                    references: categories_formalization(id)
+
+  # Insertamos las categorías
+  - changeSet:
+      id: 3
+      author: juan
+      changes:
+        - insert:
+            tableName: categories_formalization
+            columns:
+              - column: { name: id, valueNumeric: 1 }
+              - column: { name: name, value: "Base legal" }
+        - insert:
+            tableName: categories_formalization
+            columns:
+              - column: { name: id, valueNumeric: 2 }
+              - column: { name: name, value: "Local y seguridad" }
+        - insert:
+            tableName: categories_formalization
+            columns:
+              - column: { name: id, valueNumeric: 3 }
+              - column: { name: name, value: "Sectorial" }
+        - insert:
+            tableName: categories_formalization
+            columns:
+              - column: { name: id, valueNumeric: 4 }
+              - column: { name: name, value: "Operación continua" }
+
+  # Insertamos procesos según el JSON
+  - changeSet:
+      id: 4
+      author: juan
+      changes:
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 1 }
+              - column: { name: title, value: "Registro mercantil y establecimiento" }
+              - column: { name: description, value: "Matricular persona (natural o jurídica) y el establecimiento en la Cámara de Comercio." }
+              - column: { name: details_renovation, value: "Renovación anual (hasta el 31 de marzo)" }
+              - column: { name: ministery, value: "Cámara de Comercio de Villavicencio" }
+              - column: { name: ministery_link, value: "https://www.ccv.org.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 1 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 2 }
+              - column: { name: title, value: "RUT DIAN (actividad CIIU)" }
+              - column: { name: description, value: "Inscribir/actualizar RUT con CIIU correcto. Eventual obligación de facturación electrónica." }
+              - column: { name: ministery, value: "DIAN" }
+              - column: { name: ministery_link, value: "https://www.dian.gov.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 1 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 3 }
+              - column: { name: title, value: "Registro de Industria y Comercio (RIT) – Villavicencio" }
+              - column: { name: description, value: "Inscripción y declaración del ICA en el municipio." }
+              - column: { name: ministery, value: "Hacienda Villavicencio" }
+              - column: { name: ministery_link, value: "https://www.villavicencio.gov.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 1 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 4 }
+              - column: { name: title, value: "Concepto de Uso del Suelo" }
+              - column: { name: description, value: "Verificar en Planeación/Curaduría que la actividad es permitida en la dirección del local." }
+              - column: { name: ministery, value: "Planeación – Villavicencio" }
+              - column: { name: ministery_link, value: "https://www.villavicencio.gov.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 2 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 5 }
+              - column: { name: title, value: "Inspección y certificado de Bomberos" }
+              - column: { name: description, value: "Seguridad humana y contra incendios (aforo, salidas, extintores, señalización)." }
+              - column: { name: details_renovation, value: "Mantenimiento de extintores/señalización: revisión anual" }
+              - column: { name: ministery, value: "Bomberos Villavicencio" }
+              - column: { name: ministery_link, value: "https://bomberosvillavicencio.com/" }
+              - column: { name: categories_formalization_id, valueNumeric: 2 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 6 }
+              - column: { name: title, value: "Concepto sanitario y manipuladores de alimentos" }
+              - column: { name: description, value: "Condiciones higiénico-sanitarias y capacitación/carné para manipuladores (cuando aplique)." }
+              - column: { name: ministery, value: "Secretaría de Salud – Villavicencio" }
+              - column: { name: ministery_link, value: "https://www.villavicencio.gov.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 3 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 7 }
+              - column: { name: title, value: "Permisos ambientales (CORMACARENA)" }
+              - column: { name: description, value: "Permiso de vertimientos/emisiones/ruido según la actividad y el proceso." }
+              - column: { name: ministery, value: "CORMACARENA" }
+              - column: { name: ministery_link, value: "https://www.cormacarena.gov.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 3 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 8 }
+              - column: { name: title, value: "Registro Nacional de Turismo (RNT)" }
+              - column: { name: description, value: "Obligatorio para prestadores de servicios turísticos." }
+              - column: { name: details_renovation, value: "Renovación anual" }
+              - column: { name: ministery, value: "MinCIT" }
+              - column: { name: ministery_link, value: "https://www.mincit.gov.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 3 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 9 }
+              - column: { name: title, value: "Facturación electrónica (DIAN)" }
+              - column: { name: description, value: "Si estás obligado, habilítate como facturador electrónico y expide FE." }
+              - column: { name: ministery, value: "DIAN" }
+              - column: { name: ministery_link, value: "https://www.dian.gov.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 4 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 10 }
+              - column: { name: title, value: "Registro Nacional de Bases de Datos (SIC)" }
+              - column: { name: description, value: "Cuando tratas datos personales a cierta escala (según umbrales SIC)." }
+              - column: { name: ministery, value: "SIC" }
+              - column: { name: ministery_link, value: "https://www.sic.gov.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 4 }
+
+        - insert:
+            tableName: formalization_process
+            columns:
+              - column: { name: id, valueNumeric: 11 }
+              - column: { name: title, value: "Registro de marca (SIC)" }
+              - column: { name: description, value: "No obligatorio, recomendado para proteger la identidad." }
+              - column: { name: ministery, value: "SIC" }
+              - column: { name: ministery_link, value: "https://www.sic.gov.co/" }
+              - column: { name: categories_formalization_id, valueNumeric: 4 }

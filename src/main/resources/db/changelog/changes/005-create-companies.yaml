@@ -12,8 +12,18 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
+                  name: rut
+                  type: varchar(20)
+                  constraints:
+                    nullable: true
+              - column:
                   name: name
                   type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone
+                  type: varchar(15)
                   constraints:
                     nullable: false
               - column:

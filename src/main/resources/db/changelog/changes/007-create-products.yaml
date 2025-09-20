@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-create-products
+      author: juan
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: images
+                  type: text[]
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: numeric(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: companies_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: products
+            baseColumnNames: companies_id
+            referencedTableName: companies
+            referencedColumnNames: id
+            constraintName: fk_companies_id
