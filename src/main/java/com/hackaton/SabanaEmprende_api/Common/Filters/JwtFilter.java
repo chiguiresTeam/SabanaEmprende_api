@@ -3,8 +3,11 @@ package com.hackaton.SabanaEmprende_api.Common.Filters;
 import com.hackaton.SabanaEmprende_api.Common.Components.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,8 +19,10 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
+    @Autowired
     private JwtUtil jwtUtil;
 
     private static final List<String> PUBLIC_PATHS = List.of(
@@ -49,28 +54,35 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain filterChain) throws IOException, jakarta.servlet.ServletException {
+                                    FilterChain filterChain)
+            throws IOException, jakarta.servlet.ServletException {
 
-        String authHeader = request.getHeader("Authorization");
-
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-
-            if (jwtUtil.isTokenValid(token)) {
-                Claims claims = jwtUtil.getClaims(token);
-                String email = claims.getSubject();
-                String role = claims.get("role", String.class);
-
-                var authToken = new UsernamePasswordAuthenticationToken(
-                        email,
-                        null,
-                        List.of(new SimpleGrantedAuthority("ROLE_" + role))
-                );
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        // Buscar cookie con nombre "access_token"
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("access_token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
             }
+        }
+
+        if (token != null && jwtUtil.isTokenValid(token)) {
+            Claims claims = jwtUtil.getClaims(token);
+            String email = claims.getSubject();
+            String role = claims.get("role", String.class);
+
+            var authToken = new UsernamePasswordAuthenticationToken(
+                    email,
+                    null,
+                    List.of(new SimpleGrantedAuthority("ROLE_" + role))
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authToken);
         }
 
         filterChain.doFilter(request, response);
     }
+
 }

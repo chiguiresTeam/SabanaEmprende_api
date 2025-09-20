@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.hackaton.SabanaEmprende_api.Companies.dto.CompaniesDto;
 import com.hackaton.SabanaEmprende_api.Companies.dto.CompaniesResDto;
 import com.hackaton.SabanaEmprende_api.Formalization.Model.FormalizationLevelModel;
+import com.hackaton.SabanaEmprende_api.People.Model.PeopleModel;
 import com.hackaton.SabanaEmprende_api.Products.Model.ProductsModel;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -39,6 +40,10 @@ public class CompaniesModel {
     @OneToMany(mappedBy = "companies", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<ProductsModel> productsModelList;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private PeopleModel people;
 
     public CompaniesModel fromDto(CompaniesDto dto){
         this.name = dto.getName();
