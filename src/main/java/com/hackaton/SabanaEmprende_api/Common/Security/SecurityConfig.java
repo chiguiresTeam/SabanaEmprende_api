@@ -38,13 +38,12 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers( "/people", "/people/**").permitAll()
+                        .requestMatchers("/people", "/people/**").permitAll()
                         .requestMatchers("/auth", "/auth/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/companies", "/companies/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/companies", "/companies/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/products", "/products/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/products", "/products/**").permitAll()
+                        // 🔹 Permitir TODOS los métodos para compañías y productos
+                        .requestMatchers("/companies", "/companies/**").permitAll()
+                        .requestMatchers("/products", "/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/formalization", "/formalization/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
@@ -58,18 +57,20 @@ public class SecurityConfig {
                 .build();
     }
 
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+        // 🔹 Acepta requests desde cualquier origen
         config.setAllowedOrigins(List.of("*"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
-        config.setAllowCredentials(false);  // Si se usan cookies/credenciales
+        config.setAllowCredentials(false);  // no usamos cookies con JWT
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

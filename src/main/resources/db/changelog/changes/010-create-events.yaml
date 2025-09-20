@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-create-events
+      author: juan
+      changes:
+        - createTable:
+            tableName: events
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: description
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: location
+                  type: varchar(256)
+              - column:
+                  name: category
+                  type: varchar(128)
+              - column:
+                  name: author_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_published
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: events
+            baseColumnNames: author_id
+            referencedTableName: people
+            referencedColumnNames: cc
+            constraintName: fk_author_id
