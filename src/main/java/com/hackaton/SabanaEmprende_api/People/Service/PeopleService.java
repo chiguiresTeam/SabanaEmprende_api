@@ -3,6 +3,7 @@ package com.hackaton.SabanaEmprende_api.People.Service;
 import com.hackaton.SabanaEmprende_api.People.Model.PeopleModel;
 import com.hackaton.SabanaEmprende_api.People.Repository.PeopleRepository;
 import com.hackaton.SabanaEmprende_api.People.dto.PeopleDto;
+import com.hackaton.SabanaEmprende_api.People.dto.UpdatePeopleDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,8 +19,8 @@ public class PeopleService {
         return peopleRepository.save(people);
     }
 
-    public PeopleModel updatePeople(@Valid PeopleDto dto){
-        PeopleModel people = peopleRepository.findById(dto.getCc()).orElseThrow(
+    public PeopleModel updatePeople(@Valid UpdatePeopleDto dto, Long cc){
+        PeopleModel people = peopleRepository.findById(cc).orElseThrow(
                 () -> new RuntimeException("People not found")
         );
         people.fromDto(dto);

@@ -3,6 +3,7 @@ package com.hackaton.SabanaEmprende_api.People.Controller;
 import com.hackaton.SabanaEmprende_api.People.Model.PeopleModel;
 import com.hackaton.SabanaEmprende_api.People.Service.PeopleService;
 import com.hackaton.SabanaEmprende_api.People.dto.PeopleDto;
+import com.hackaton.SabanaEmprende_api.People.dto.UpdatePeopleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,9 +29,9 @@ public class PeopleController {
         return ResponseEntity.ok(peopleModel);
     }
 
-    @PutMapping
-    public ResponseEntity<PeopleModel> updatePeople(@RequestBody PeopleDto dto) {
-        return ResponseEntity.ok(peopleService.updatePeople(dto));
+    @PutMapping("/{cc}")
+    public ResponseEntity<PeopleModel> updatePeople(@RequestBody UpdatePeopleDto dto, @PathVariable("cc") Long cc) {
+        return ResponseEntity.ok(peopleService.updatePeople(dto,cc));
     }
 
     @DeleteMapping
